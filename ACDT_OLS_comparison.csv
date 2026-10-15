@@ -1,0 +1,3 @@
+Model,N,R²,Adj R²,Metascore β (log/$ per point),Metascore p,10-point %,10-point % 95% CI
+A: Simple,385,0.004,0.001,-0.0095,0.20481,-9.1,"[-21.5, 5.3]"
+B: Multiple,385,0.582,0.573,0.0206,0.00077,22.9,"[9.0, 38.5]"

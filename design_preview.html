@@ -1,0 +1,387 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Beyond the Ratings — design preview</title><style>
+*{box-sizing:border-box}body{margin:0;background:#F7FAFD;color:#173049;font-family:Inter,Arial,sans-serif;font-size:15px}aside{position:fixed;top:0;bottom:0;left:0;width:239px;background:#EDF3F8;border-right:1px solid #DDE8EF;padding:28px 22px}aside strong{font-size:16px;letter-spacing:.03em}aside .sm{color:#748799;font-size:12px;margin-top:6px}nav{display:grid;gap:18px;margin-top:40px}nav a{color:#536D84;text-decoration:none;font-size:13px}nav a:hover{color:#146F79}main{margin:0 20px 0 259px;max-width:1260px;padding:22px 17px 120px}.hero{background:linear-gradient(120deg,#102841 0%,#1D445C 70%,#176D75 150%);padding:45px 50px;border-radius:20px;color:white;box-shadow:0 11px 31px rgba(25,45,66,.1)}.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:#99D1D3;font-weight:750}.hero h1{font-size:62px;letter-spacing:-2px;line-height:1.05;margin:16px 0}.hero p{color:#D6E5ED;line-height:1.6;font-size:16px;max-width:720px}.tags{display:flex;gap:10px;margin-top:30px}.tag{background:#355A6E;border:1px solid #497285;color:#E9F4F6;padding:10px 12px;border-radius:28px;font-size:12px}.section{margin-top:53px}.section .eyebrow{color:#147A80}.section h2{font-size:33px;letter-spacing:-1px;margin:8px 0 12px}.section p{color:#62778A;max-width:800px;line-height:1.6}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}.stat{background:#fff;border:1px solid #DFE9F0;padding:22px 18px;border-radius:16px}.stat label{display:block;font-weight:bold;color:#658093;letter-spacing:1px;font-size:11px}.stat strong{font-size:33px;display:block;margin:8px 0}.stat small{color:#7D8E9C}.chart{background:white;border:1px solid #DAE6EE;border-radius:16px;padding:22px 28px}.chart h3{margin:0 0 10px}.row{display:flex;gap:18px;align-items:center}.row span{margin-left:auto;color:#6C8092;font-size:12px}select{border:1px solid #D5E3EA;border-radius:8px;padding:8px;color:#17354B;background:#F5F9FA}svg{width:100%;height:auto}.plotline{stroke:#D9E4EB;stroke-width:1;fill:none}.axislabel{fill:#7D8F9C;font-size:10px}.caps{color:#7E8D9B;font-size:11px;margin-top:5px}.callout{background:#EAF5F3;padding:24px 30px;border-radius:14px;border-left:4px solid #147A80;margin-top:24px}.callout b{color:#1D535B}.muted-banner{background:#DFEAEF;color:#45677D;border-radius:8px;padding:10px 13px;margin:16px 0;font-size:12px}#map-mini{width:100%;max-width:850px;border-radius:12px;margin-top:18px}.footer{margin-top:70px;color:#7C8FA0;font-size:11px;letter-spacing:1.5px;text-align:center}@media(max-width:850px){aside{display:none}main{margin:0 8px}.hero h1{font-size:39px}.stats{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><aside><strong>🎞️ BEYOND THE RATINGS</strong><div class="sm">ACDT Project 1 · Story preview</div><nav><a href="#myth">01 · The myth</a><a href="#data">02 · The data</a><a href="#reversal">03 · The reversal</a><a href="#maps">04 · System maps</a><a href="#end">05 · Next steps</a></nav><p class="sm" style="margin-top:60px">This is a static visual preview. The full Streamlit app includes 8 chapters, live fitted calculations, all three maps and download buttons.</p></aside><main><section class="hero"><div class="eyebrow">An interactive ACDT data story · project 1</div><h1>Beyond the Ratings.</h1><p>Do better-reviewed films earn more? A journey from a familiar assumption to the hidden systems shaping global box-office success.</p><div class="tags"><div class="tag">2022–2025 releases</div><div class="tag">385 films analyzed</div><div class="tag">4 genres</div><div class="tag">Regression + RF + DML</div></div></section><div class="muted-banner">DESIGN PREVIEW · Main live site is implemented in app.py and must be run with Streamlit.</div><section class="section" id="myth"><div class="eyebrow">Chapter 01</div><h2>The myth: a better review means a bigger hit</h2><p>Higher Metascores are often thought to translate into higher worldwide box office. We tested that assumption while considering budget, release year and genre.</p><div class="callout"><b>Research question:</b> How does Metacritic Metascore relate to worldwide gross after adjustment — and does genre change the association?</div></section><section class="section" id="data"><div class="eyebrow">Chapter 02</div><h2>Meet the evidence</h2><p>Every dot is a movie. The real scatter below uses all 385 study movies and retains the log-scaled revenue axis.</p><div class="stats"><div class="stat"><label>INPUT FILMS</label><strong>407</strong><small>USD-converted candidates</small></div><div class="stat"><label>VALIDATED</label><strong>406</strong><small>After model checks</small></div><div class="stat"><label>STUDY SAMPLE</label><strong>385</strong><small>Across four target genres</small></div><div class="stat"><label>RANGE</label><strong>2022–25</strong><small>2025 partially covered</small></div></div><div class="chart"><div class="row"><h3>Metascore vs worldwide gross</h3><span>Choose a genre to explore</span><select id="genre" onchange="filterGenre(this.value)"><option value="All">All genres</option><option>Action</option><option>Comedy</option><option>Drama</option><option>Horror</option></select></div><svg viewBox="0 0 1000 388" aria-label="Scatterplot of Metascore and logarithmic worldwide gross"><path class="plotline" d="M115 50V330H960"/><path class="plotline" d="M115 120H960 M115 190H960 M115 260H960"/><g id="movie-dots"><circle class="dot" data-genre="Action" cx="563.2" cy="129.7" r="4.0" fill="#146F79" opacity="0.7"><title>Beast · Metascore 54 · $59.1M</title></circle>
+<circle class="dot" data-genre="Horror" cx="339.1" cy="171.5" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Winnie-the-Pooh: Blood and Honey 2 · Metascore 27 · $7.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="729.2" cy="165.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Crime Is Mine · Metascore 74 · $10.5M</title></circle>
+<circle class="dot" data-genre="Horror" cx="571.5" cy="127.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Boogeyman · Metascore 55 · $67.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="637.9" cy="161.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Beau Is Afraid · Metascore 63 · $12.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="654.5" cy="109.3" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Black Phone · Metascore 65 · $161.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="538.3" cy="129.5" r="4.0" fill="#325270" opacity="0.7"><title>Whitney Houston: I Wanna Dance with Somebody · Metascore 51 · $59.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="447.0" cy="150.0" r="4.0" fill="#325270" opacity="0.7"><title>Father Stu · Metascore 40 · $21.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="438.7" cy="156.5" r="4.0" fill="#325270" opacity="0.7"><title>Here · Metascore 39 · $15.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="754.1" cy="206.4" r="4.0" fill="#325270" opacity="0.7"><title>The Royal Hotel · Metascore 77 · $1.4M</title></circle>
+<circle class="dot" data-genre="Horror" cx="546.6" cy="122.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Trap · Metascore 52 · $83.7M</title></circle>
+<circle class="dot" data-genre="Horror" cx="637.9" cy="131.3" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Knock at the Cabin · Metascore 63 · $54.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="679.4" cy="99.4" r="4.0" fill="#325270" opacity="0.7"><title>A Quiet Place: Day One · Metascore 68 · $261.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="588.1" cy="77.7" r="4.0" fill="#146F79" opacity="0.7"><title>Thor: Love and Thunder · Metascore 57 · $760.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="654.5" cy="92.3" r="4.0" fill="#146F79" opacity="0.7"><title>Twisters · Metascore 65 · $372.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="546.6" cy="163.8" r="4.0" fill="#325270" opacity="0.7"><title>Parthenope · Metascore 52 · $11.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="646.2" cy="154.8" r="4.0" fill="#325270" opacity="0.7"><title>The Apprentice · Metascore 64 · $17.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="820.5" cy="149.8" r="4.0" fill="#325270" opacity="0.7"><title>Decision to Leave · Metascore 85 · $22.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="397.2" cy="135.8" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Imaginary · Metascore 34 · $43.8M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="613.0" cy="149.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>See How They Run · Metascore 60 · $22.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="405.5" cy="173.2" r="4.0" fill="#146F79" opacity="0.7"><title>Knights of the Zodiac · Metascore 35 · $7.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="171.4" r="4.0" fill="#325270" opacity="0.7"><title>Io Capitano · Metascore 79 · $7.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="654.5" cy="249.4" r="4.0" fill="#325270" opacity="0.7"><title>Alice, Darling · Metascore 65 · $0.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="554.9" cy="163.8" r="4.0" fill="#146F79" opacity="0.7"><title>Silent Night · Metascore 53 · $11.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="878.6" cy="132.1" r="4.0" fill="#325270" opacity="0.7"><title>The Zone of Interest · Metascore 92 · $52.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="463.6" cy="90.7" r="4.0" fill="#146F79" opacity="0.7"><title>Captain America: Brave New World · Metascore 42 · $402.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="886.9" cy="198.8" r="4.0" fill="#325270" opacity="0.7"><title>Petite Maman · Metascore 93 · $2.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="297.6" cy="224.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Children of the Corn · Metascore 22 · $0.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="554.9" cy="103.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Trolls Band Together · Metascore 53 · $209.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="629.6" cy="121.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Terrifier 3 · Metascore 62 · $90.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="621.3" cy="213.7" r="4.0" fill="#325270" opacity="0.7"><title>Armand · Metascore 61 · $1.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="397.2" cy="154.6" r="4.0" fill="#146F79" opacity="0.7"><title>Love Hurts · Metascore 34 · $17.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="737.5" cy="114.1" r="4.0" fill="#146F79" opacity="0.7"><title>Civil War · Metascore 75 · $127.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="712.6" cy="126.6" r="4.0" fill="#325270" opacity="0.7"><title>The Color Purple · Metascore 72 · $68.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="372.3" cy="99.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Garfield Movie · Metascore 31 · $257.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="795.6" cy="211.5" r="4.0" fill="#146F79" opacity="0.7"><title>Hundreds of Beavers · Metascore 82 · $1.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="837.1" cy="197.0" r="4.0" fill="#325270" opacity="0.7"><title>Return to Seoul · Metascore 87 · $2.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="662.8" cy="175.4" r="4.0" fill="#325270" opacity="0.7"><title>The Last Showgirl · Metascore 66 · $6.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="228.5" r="4.0" fill="#325270" opacity="0.7"><title>The Man in the Basement · Metascore 75 · $0.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="180.7" r="4.0" fill="#325270" opacity="0.7"><title>Origin · Metascore 75 · $4.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="621.3" cy="224.5" r="4.0" fill="#325270" opacity="0.7"><title>The Universal Theory · Metascore 61 · $0.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="554.9" cy="109.1" r="4.0" fill="#146F79" opacity="0.7"><title>The Beekeeper · Metascore 53 · $162.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="637.9" cy="164.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Piece by Piece · Metascore 63 · $10.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="720.9" cy="135.2" r="4.0" fill="#325270" opacity="0.7"><title>The Iron Claw · Metascore 73 · $45.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="546.6" cy="207.7" r="4.0" fill="#146F79" opacity="0.7"><title>Cleaner · Metascore 52 · $1.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="787.3" cy="253.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Amanda · Metascore 81 · $0.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="538.3" cy="133.6" r="4.0" fill="#146F79" opacity="0.7"><title>Operation Fortune: Ruse de Guerre · Metascore 51 · $49.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="546.6" cy="239.5" r="4.0" fill="#325270" opacity="0.7"><title>A Mouthful of Air · Metascore 52 · $0.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="720.9" cy="98.3" r="4.0" fill="#146F79" opacity="0.7"><title>Creed III · Metascore 73 · $276.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="646.2" cy="75.6" r="4.0" fill="#146F79" opacity="0.7"><title>Guardians of the Galaxy Vol. 3 · Metascore 64 · $845.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="654.5" cy="251.0" r="4.0" fill="#325270" opacity="0.7"><title>The Assessment · Metascore 65 · $0.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="870.3" cy="190.3" r="4.0" fill="#325270" opacity="0.7"><title>Nickel Boys · Metascore 91 · $3.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="538.3" cy="132.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Marry Me · Metascore 51 · $50.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="745.8" cy="131.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Asteroid City · Metascore 76 · $53.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="513.4" cy="248.2" r="4.0" fill="#146F79" opacity="0.7"><title>Gold · Metascore 48 · $0.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="397.2" cy="142.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Harold and the Purple Crayon · Metascore 34 · $32.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="696.0" cy="258.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Humanist Vampire Seeking Consenting Suicidal Person · Metascore 70 · $0.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="546.6" cy="137.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>80 for Brady · Metascore 52 · $40.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="671.1" cy="55.0" r="4.0" fill="#146F79" opacity="0.7"><title>Avatar: The Way of Water · Metascore 67 · $2,320.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="538.3" cy="184.6" r="4.0" fill="#146F79" opacity="0.7"><title>Absolution · Metascore 51 · $4.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="554.9" cy="156.0" r="4.0" fill="#146F79" opacity="0.7"><title>Hypnotic · Metascore 53 · $16.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="654.5" cy="125.3" r="4.0" fill="#146F79" opacity="0.7"><title>Strange World · Metascore 65 · $73.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="447.0" cy="145.1" r="4.0" fill="#146F79" opacity="0.7"><title>The 355 · Metascore 40 · $27.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="754.1" cy="108.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Nope · Metascore 77 · $171.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="787.3" cy="168.9" r="4.0" fill="#325270" opacity="0.7"><title>Lost Illusions · Metascore 81 · $8.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="779.0" cy="218.5" r="4.0" fill="#325270" opacity="0.7"><title>The Beast · Metascore 80 · $0.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="696.0" cy="140.2" r="4.0" fill="#146F79" opacity="0.7"><title>Monkey Man · Metascore 70 · $35.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="554.9" cy="185.2" r="4.0" fill="#146F79" opacity="0.7"><title>Project Wolf Hunting · Metascore 53 · $3.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="729.2" cy="123.4" r="4.0" fill="#146F79" opacity="0.7"><title>Jackass Forever · Metascore 74 · $80.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="480.2" cy="151.0" r="4.0" fill="#146F79" opacity="0.7"><title>Homestead · Metascore 44 · $20.8M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="712.6" cy="157.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Bros · Metascore 72 · $14.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="588.1" cy="133.1" r="4.0" fill="#146F79" opacity="0.7"><title>Brahmastra Part One: Shiva · Metascore 57 · $50.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="687.7" cy="268.8" r="4.0" fill="#325270" opacity="0.7"><title>The Accidental Getaway Driver · Metascore 69 · $0.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="712.6" cy="202.3" r="4.0" fill="#325270" opacity="0.7"><title>Eileen · Metascore 72 · $1.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="637.9" cy="114.9" r="4.0" fill="#325270" opacity="0.7"><title>A Haunting in Venice · Metascore 63 · $122.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="762.4" cy="288.4" r="4.0" fill="#325270" opacity="0.7"><title>Oceans Are the Real Continents · Metascore 78 · $0.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="563.2" cy="121.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Cocaine Bear · Metascore 54 · $88.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="687.7" cy="167.4" r="4.0" fill="#325270" opacity="0.7"><title>The Animal Kingdom · Metascore 69 · $9.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="712.6" cy="107.0" r="4.0" fill="#B5C5D1" opacity="0.7"><title>M3GAN · Metascore 72 · $180.1M</title></circle>
+<circle class="dot" data-genre="Horror" cx="613.0" cy="116.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Saw X · Metascore 60 · $112.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="554.9" cy="136.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Fly Me to the Moon · Metascore 53 · $42.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="430.4" cy="72.1" r="4.0" fill="#146F79" opacity="0.7"><title>Jurassic World: Dominion · Metascore 38 · $1,002.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="629.6" cy="153.9" r="4.0" fill="#146F79" opacity="0.7"><title>Fall · Metascore 62 · $18.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="505.1" cy="118.2" r="4.0" fill="#325270" opacity="0.7"><title>Halloween Ends · Metascore 47 · $104.4M</title></circle>
+<circle class="dot" data-genre="Horror" cx="679.4" cy="103.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Smile · Metascore 68 · $217.4M</title></circle>
+<circle class="dot" data-genre="Horror" cx="671.1" cy="112.4" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Smile 2 · Metascore 67 · $138.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="662.8" cy="297.2" r="4.0" fill="#325270" opacity="0.7"><title>American Star · Metascore 66 · $0.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="696.0" cy="142.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Mrs. Harris Goes to Paris · Metascore 70 · $31.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="729.2" cy="106.8" r="4.0" fill="#146F79" opacity="0.7"><title>Teenage Mutant Ninja Turtles: Mutant Mayhem · Metascore 74 · $181.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="579.8" cy="66.2" r="4.0" fill="#146F79" opacity="0.7"><title>Deadpool &amp; Wolverine · Metascore 56 · $1,338.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="745.8" cy="245.6" r="4.0" fill="#325270" opacity="0.7"><title>La civil · Metascore 76 · $0.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="197.1" r="4.0" fill="#325270" opacity="0.7"><title>Emily the Criminal · Metascore 75 · $2.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="795.6" cy="119.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Challengers · Metascore 82 · $96.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="596.4" cy="91.6" r="4.0" fill="#146F79" opacity="0.7"><title>Indiana Jones and the Dial of Destiny · Metascore 58 · $384.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="712.6" cy="104.4" r="4.0" fill="#146F79" opacity="0.7"><title>Dungeons &amp; Dragons: Honor Among Thieves · Metascore 72 · $205.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="687.7" cy="184.4" r="4.0" fill="#325270" opacity="0.7"><title>The Outfit · Metascore 69 · $4.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="546.6" cy="112.6" r="4.0" fill="#325270" opacity="0.7"><title>Death on the Nile · Metascore 52 · $137.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="712.6" cy="77.4" r="4.0" fill="#146F79" opacity="0.7"><title>The Batman · Metascore 72 · $772.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="530.0" cy="140.9" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Wolf Man · Metascore 50 · $34.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="862.0" cy="133.7" r="4.0" fill="#325270" opacity="0.7"><title>The Brutalist · Metascore 90 · $48.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="227.9" r="4.0" fill="#325270" opacity="0.7"><title>Keane · Metascore 79 · $0.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="621.3" cy="122.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Dog · Metascore 61 · $84.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="654.5" cy="191.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Rose Maker · Metascore 65 · $2.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="803.9" cy="199.9" r="4.0" fill="#325270" opacity="0.7"><title>Full Time · Metascore 83 · $1.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="579.8" cy="86.6" r="4.0" fill="#146F79" opacity="0.7"><title>Sonic the Hedgehog 3 · Metascore 56 · $491.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="820.5" cy="165.8" r="4.0" fill="#325270" opacity="0.7"><title>The Beasts · Metascore 85 · $10.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="662.8" cy="198.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Inventor · Metascore 66 · $2.1M</title></circle>
+<circle class="dot" data-genre="Horror" cx="779.0" cy="158.0" r="4.0" fill="#B5C5D1" opacity="0.7"><title>X · Metascore 80 · $14.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="679.4" cy="181.9" r="4.0" fill="#325270" opacity="0.7"><title>Crimes of the Future · Metascore 68 · $4.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="588.1" cy="173.1" r="4.0" fill="#146F79" opacity="0.7"><title>Land of Bad · Metascore 57 · $7.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="210.0" r="4.0" fill="#325270" opacity="0.7"><title>Santosh · Metascore 75 · $1.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="455.3" cy="296.2" r="4.0" fill="#325270" opacity="0.7"><title>Day Zero · Metascore 41 · $0.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="521.7" cy="138.3" r="4.0" fill="#325270" opacity="0.7"><title>Horizon: An American Saga - Chapter 1 · Metascore 49 · $38.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="720.9" cy="106.9" r="4.0" fill="#146F79" opacity="0.7"><title>The Fall Guy · Metascore 73 · $181.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="729.2" cy="209.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Smoking Causes Coughing · Metascore 74 · $1.2M</title></circle>
+<circle class="dot" data-genre="Horror" cx="488.5" cy="124.3" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Pope&#x27;s Exorcist · Metascore 45 · $77.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="563.2" cy="84.4" r="4.0" fill="#146F79" opacity="0.7"><title>Kung Fu Panda 4 · Metascore 54 · $547.7M</title></circle>
+<circle class="dot" data-genre="Horror" cx="546.6" cy="150.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Last Voyage of the Demeter · Metascore 52 · $21.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="629.6" cy="128.8" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Monkey · Metascore 62 · $61.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="463.6" cy="88.8" r="4.0" fill="#146F79" opacity="0.7"><title>Transformers: Rise of the Beasts · Metascore 42 · $441.7M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="629.6" cy="230.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Dual · Metascore 62 · $0.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="538.3" cy="116.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Lyle, Lyle, Crocodile · Metascore 51 · $111.1M</title></circle>
+<circle class="dot" data-genre="Horror" cx="488.5" cy="106.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Insidious: The Red Door · Metascore 45 · $189.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="613.0" cy="130.3" r="4.0" fill="#146F79" opacity="0.7"><title>Den of Thieves: Pantera · Metascore 60 · $57.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="546.6" cy="130.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Magic Mike&#x27;s Last Dance · Metascore 52 · $57.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="720.9" cy="61.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Inside Out 2 · Metascore 73 · $1,698.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="463.6" cy="182.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Maybe I Do · Metascore 42 · $4.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="571.5" cy="158.5" r="4.0" fill="#325270" opacity="0.7"><title>Megalopolis · Metascore 55 · $14.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="563.2" cy="168.0" r="4.0" fill="#325270" opacity="0.7"><title>White Bird · Metascore 54 · $9.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="637.9" cy="118.2" r="4.0" fill="#146F79" opacity="0.7"><title>The Creator · Metascore 63 · $104.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="679.4" cy="178.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Innocent · Metascore 68 · $5.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="596.4" cy="105.8" r="4.0" fill="#146F79" opacity="0.7"><title>The Equalizer 3 · Metascore 58 · $191.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="488.5" cy="186.6" r="4.0" fill="#325270" opacity="0.7"><title>The Son · Metascore 45 · $3.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="413.8" cy="100.3" r="4.0" fill="#325270" opacity="0.7"><title>Sound of Freedom · Metascore 36 · $250.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="704.3" cy="129.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Heretic · Metascore 71 · $59.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="646.2" cy="155.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Kinds of Kindness · Metascore 64 · $16.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="613.0" cy="165.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Saturday Night · Metascore 60 · $10.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="571.5" cy="143.7" r="4.0" fill="#146F79" opacity="0.7"><title>The Ministry of Ungentlemanly Warfare · Metascore 55 · $29.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="505.1" cy="90.5" r="4.0" fill="#146F79" opacity="0.7"><title>Sonic the Hedgehog 2 · Metascore 47 · $405.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="687.7" cy="167.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Day the Earth Blew Up: A Looney Tunes Movie · Metascore 69 · $9.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="372.3" cy="196.4" r="4.0" fill="#146F79" opacity="0.7"><title>The King&#x27;s Daughter · Metascore 31 · $2.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="604.7" cy="121.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>No Hard Feelings · Metascore 59 · $87.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="729.2" cy="159.1" r="4.0" fill="#325270" opacity="0.7"><title>She Said · Metascore 74 · $13.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="729.2" cy="157.3" r="4.0" fill="#325270" opacity="0.7"><title>Bones and All · Metascore 74 · $15.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="671.1" cy="75.2" r="4.0" fill="#146F79" opacity="0.7"><title>Black Panther: Wakanda Forever · Metascore 67 · $859.2M</title></circle>
+<circle class="dot" data-genre="Horror" cx="588.1" cy="140.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Immaculate · Metascore 57 · $35.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="488.5" cy="90.4" r="4.0" fill="#146F79" opacity="0.7"><title>Uncharted · Metascore 45 · $407.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="530.0" cy="181.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Clerks III · Metascore 50 · $4.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="696.0" cy="139.7" r="4.0" fill="#325270" opacity="0.7"><title>The Bikeriders · Metascore 70 · $36.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="696.0" cy="240.2" r="4.0" fill="#325270" opacity="0.7"><title>Handling the Undead · Metascore 70 · $0.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="438.7" cy="153.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>About My Father · Metascore 39 · $18.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="521.7" cy="142.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Amsterdam · Metascore 49 · $31.2M</title></circle>
+<circle class="dot" data-genre="Horror" cx="629.6" cy="174.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Cuckoo · Metascore 62 · $6.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="604.7" cy="112.6" r="4.0" fill="#325270" opacity="0.7"><title>Hidden Blade · Metascore 59 · $136.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="413.8" cy="176.6" r="4.0" fill="#146F79" opacity="0.7"><title>The Killer&#x27;s Game · Metascore 36 · $5.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="828.8" cy="79.7" r="4.0" fill="#146F79" opacity="0.7"><title>Spider-Man: Across the Spider-Verse · Metascore 86 · $690.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="380.6" cy="157.6" r="4.0" fill="#325270" opacity="0.7"><title>Firestarter · Metascore 32 · $15.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="397.2" cy="106.4" r="4.0" fill="#146F79" opacity="0.7"><title>Red One · Metascore 34 · $185.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="803.9" cy="150.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Turning Red · Metascore 83 · $21.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="779.0" cy="180.6" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Strange Darling · Metascore 80 · $4.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="496.8" cy="162.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Laal Singh Chaddha · Metascore 46 · $12.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="754.1" cy="155.0" r="4.0" fill="#146F79" opacity="0.7"><title>Twilight of the Warriors: Walled In · Metascore 77 · $17.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="604.7" cy="133.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>There&#x27;s Still Tomorrow · Metascore 59 · $50.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="579.8" cy="78.8" r="4.0" fill="#325270" opacity="0.7"><title>Mufasa: The Lion King · Metascore 56 · $719.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="646.2" cy="87.9" r="4.0" fill="#146F79" opacity="0.7"><title>Gladiator II · Metascore 64 · $462.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="330.8" cy="165.5" r="4.0" fill="#146F79" opacity="0.7"><title>Freelance · Metascore 26 · $10.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="621.3" cy="127.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Babylon · Metascore 61 · $65.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="571.5" cy="132.2" r="4.0" fill="#146F79" opacity="0.7"><title>Ambulance · Metascore 55 · $52.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="845.4" cy="115.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Poor Things · Metascore 88 · $117.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="563.2" cy="93.6" r="4.0" fill="#146F79" opacity="0.7"><title>The Hunger Games: The Ballad of Songbirds &amp; Snakes · Metascore 54 · $348.9M</title></circle>
+<circle class="dot" data-genre="Horror" cx="571.5" cy="155.6" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Never Let Go · Metascore 55 · $16.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="704.3" cy="197.9" r="4.0" fill="#325270" opacity="0.7"><title>Memory · Metascore 71 · $2.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="554.9" cy="93.4" r="4.0" fill="#325270" opacity="0.7"><title>It Ends with Us · Metascore 53 · $351.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="646.2" cy="100.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Bad Guys · Metascore 64 · $250.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="339.1" cy="156.5" r="4.0" fill="#146F79" opacity="0.7"><title>Blacklight · Metascore 27 · $15.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="538.3" cy="116.5" r="4.0" fill="#8CA6B8" opacity="0.7"><title>A Man Called Otto · Metascore 51 · $113.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="513.4" cy="121.7" r="4.0" fill="#325270" opacity="0.7"><title>Don&#x27;t Worry Darling · Metascore 48 · $87.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="505.1" cy="115.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Haunted Mansion · Metascore 47 · $117.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="870.3" cy="179.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>La Chimera · Metascore 91 · $5.2M</title></circle>
+<circle class="dot" data-genre="Horror" cx="613.0" cy="112.5" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Scream · Metascore 60 · $137.7M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="579.8" cy="73.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Minions: The Rise of Gru · Metascore 56 · $940.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="787.3" cy="185.4" r="4.0" fill="#325270" opacity="0.7"><title>The Night of the 12th · Metascore 81 · $3.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="430.4" cy="135.7" r="4.0" fill="#146F79" opacity="0.7"><title>Flight Risk · Metascore 38 · $44.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="629.6" cy="88.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Beetlejuice Beetlejuice · Metascore 62 · $451.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="720.9" cy="87.0" r="4.0" fill="#146F79" opacity="0.7"><title>Puss in Boots: The Last Wish · Metascore 73 · $481.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="762.4" cy="107.0" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Nosferatu · Metascore 78 · $180.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="662.8" cy="175.0" r="4.0" fill="#325270" opacity="0.7"><title>Cyrano · Metascore 66 · $6.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="662.8" cy="150.1" r="4.0" fill="#146F79" opacity="0.7"><title>Devotion · Metascore 66 · $21.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="563.2" cy="316.6" r="4.0" fill="#325270" opacity="0.7"><title>Sniper. The White Raven · Metascore 54 · $0.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="496.8" cy="104.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Ghostbusters: Frozen Empire · Metascore 46 · $202.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="463.6" cy="199.5" r="4.0" fill="#325270" opacity="0.7"><title>Opus · Metascore 42 · $1.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="513.4" cy="87.2" r="4.0" fill="#146F79" opacity="0.7"><title>Ant-Man and the Wasp: Quantumania · Metascore 48 · $476.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="405.5" cy="119.8" r="4.0" fill="#146F79" opacity="0.7"><title>Argylle · Metascore 35 · $96.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="637.9" cy="300.5" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Borderline · Metascore 63 · $0.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="613.0" cy="73.1" r="4.0" fill="#146F79" opacity="0.7"><title>Doctor Strange in the Multiverse of Madness · Metascore 60 · $955.8M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="671.1" cy="153.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Blackening · Metascore 67 · $18.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="779.0" cy="64.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Barbie · Metascore 80 · $1,447.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="160.2" r="4.0" fill="#146F79" opacity="0.7"><title>Memory · Metascore 41 · $13.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="662.8" cy="149.4" r="4.0" fill="#325270" opacity="0.7"><title>Last Breath · Metascore 66 · $22.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="696.0" cy="273.5" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Golden Voices · Metascore 70 · $0.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="646.2" cy="97.4" r="4.0" fill="#325270" opacity="0.7"><title>Elvis · Metascore 64 · $288.7M</title></circle>
+<circle class="dot" data-genre="Horror" cx="413.8" cy="133.4" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Tarot · Metascore 36 · $49.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="729.2" cy="231.6" r="4.0" fill="#325270" opacity="0.7"><title>They Shot the Piano Player · Metascore 74 · $0.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="787.3" cy="83.5" r="4.0" fill="#146F79" opacity="0.7"><title>Mission: Impossible - Dead Reckoning Part One · Metascore 81 · $571.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="870.3" cy="130.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Anora · Metascore 91 · $56.4M</title></circle>
+<circle class="dot" data-genre="Horror" cx="629.6" cy="136.3" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Abigail · Metascore 62 · $42.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="862.0" cy="72.6" r="4.0" fill="#325270" opacity="0.7"><title>Oppenheimer · Metascore 90 · $975.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="654.5" cy="131.6" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The First Omen · Metascore 65 · $53.8M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="455.3" cy="160.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Easter Sunday · Metascore 41 · $13.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="770.7" cy="107.7" r="4.0" fill="#146F79" opacity="0.7"><title>Furiosa: A Mad Max Saga · Metascore 79 · $174.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="405.5" cy="128.8" r="4.0" fill="#146F79" opacity="0.7"><title>Kraven the Hunter · Metascore 35 · $62.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="563.2" cy="287.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Empire · Metascore 54 · $0.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="364.0" cy="138.8" r="4.0" fill="#146F79" opacity="0.7"><title>The Expendables 4 · Metascore 30 · $37.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="422.1" cy="164.6" r="4.0" fill="#146F79" opacity="0.7"><title>The Machine · Metascore 37 · $10.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="762.4" cy="63.9" r="4.0" fill="#146F79" opacity="0.7"><title>Top Gun: Maverick · Metascore 78 · $1,495.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="505.1" cy="83.5" r="4.0" fill="#146F79" opacity="0.7"><title>Godzilla x Kong: The New Empire · Metascore 47 · $571.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="571.5" cy="98.7" r="4.0" fill="#146F79" opacity="0.7"><title>The Flash · Metascore 55 · $271.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="596.4" cy="118.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Mean Girls · Metascore 58 · $105.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="579.8" cy="82.0" r="4.0" fill="#146F79" opacity="0.7"><title>The Wandering Earth II · Metascore 56 · $615.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="579.8" cy="79.3" r="4.0" fill="#146F79" opacity="0.7"><title>Fast X · Metascore 56 · $704.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="496.8" cy="150.6" r="4.0" fill="#325270" opacity="0.7"><title>Unsung Hero · Metascore 46 · $21.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="505.1" cy="100.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Wish · Metascore 47 · $255.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="496.8" cy="161.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Exorcism · Metascore 46 · $12.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="141.5" r="4.0" fill="#325270" opacity="0.7"><title>Priscilla · Metascore 79 · $33.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="745.8" cy="119.5" r="4.0" fill="#146F79" opacity="0.7"><title>The Woman King · Metascore 76 · $97.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="762.4" cy="124.3" r="4.0" fill="#325270" opacity="0.7"><title>The Substance · Metascore 78 · $77.3M</title></circle>
+<circle class="dot" data-genre="Drama" cx="613.0" cy="151.5" r="4.0" fill="#325270" opacity="0.7"><title>Three Thousand Years of Longing · Metascore 60 · $20.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="720.9" cy="227.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Anaïs in Love · Metascore 73 · $0.5M</title></circle>
+<circle class="dot" data-genre="Horror" cx="505.1" cy="98.8" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Nun II · Metascore 47 · $269.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="754.1" cy="165.1" r="4.0" fill="#325270" opacity="0.7"><title>Presence · Metascore 77 · $10.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="696.0" cy="112.9" r="4.0" fill="#325270" opacity="0.7"><title>A Complete Unknown · Metascore 70 · $134.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="629.6" cy="125.0" r="4.0" fill="#146F79" opacity="0.7"><title>Plane · Metascore 62 · $74.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="745.8" cy="204.1" r="4.0" fill="#146F79" opacity="0.7"><title>Mars Express · Metascore 76 · $1.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="563.2" cy="139.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Strays · Metascore 54 · $36.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="521.7" cy="104.4" r="4.0" fill="#146F79" opacity="0.7"><title>PAW Patrol: The Mighty Movie · Metascore 49 · $205.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="183.1" r="4.0" fill="#325270" opacity="0.7"><title>Emily · Metascore 75 · $4.3M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="505.1" cy="166.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Lisa Frankenstein · Metascore 47 · $9.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="554.9" cy="163.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Aline · Metascore 53 · $11.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="496.8" cy="65.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Super Mario Bros. Movie · Metascore 46 · $1,360.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="646.2" cy="102.8" r="4.0" fill="#146F79" opacity="0.7"><title>Napoleon · Metascore 64 · $221.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="662.8" cy="151.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Dumb Money · Metascore 66 · $20.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="662.8" cy="184.5" r="4.0" fill="#146F79" opacity="0.7"><title>The Prosecutor · Metascore 66 · $4.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="571.5" cy="190.9" r="4.0" fill="#325270" opacity="0.7"><title>Rule Breakers · Metascore 55 · $2.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="596.4" cy="71.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Moana 2 · Metascore 58 · $1,059.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="787.3" cy="203.7" r="4.0" fill="#325270" opacity="0.7"><title>Godland · Metascore 81 · $1.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="621.3" cy="113.6" r="4.0" fill="#146F79" opacity="0.7"><title>Blue Beetle · Metascore 61 · $130.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="422.1" cy="211.5" r="4.0" fill="#325270" opacity="0.7"><title>50 to 1 · Metascore 37 · $1.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="181.8" r="4.0" fill="#146F79" opacity="0.7"><title>In the Lost Lands · Metascore 41 · $4.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="579.8" cy="104.2" r="4.0" fill="#146F79" opacity="0.7"><title>DC League of Super-Pets · Metascore 56 · $207.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="588.1" cy="204.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Dicks: The Musical · Metascore 57 · $1.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="812.2" cy="150.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Are You There God? It&#x27;s Me, Margaret. · Metascore 84 · $21.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="546.6" cy="72.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Despicable Me 4 · Metascore 52 · $969.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="729.2" cy="228.2" r="4.0" fill="#325270" opacity="0.7"><title>Scarlet · Metascore 74 · $0.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="546.6" cy="102.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Anyone But You · Metascore 52 · $220.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="662.8" cy="197.5" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Skinamarink · Metascore 66 · $2.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="729.2" cy="204.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Monk and the Gun · Metascore 74 · $1.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="803.9" cy="178.9" r="4.0" fill="#325270" opacity="0.7"><title>Sing Sing · Metascore 83 · $5.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="505.1" cy="113.0" r="4.0" fill="#146F79" opacity="0.7"><title>Shazam! Fury of the Gods · Metascore 47 · $134.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="364.0" cy="148.0" r="4.0" fill="#146F79" opacity="0.7"><title>The Crow · Metascore 30 · $24.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="554.9" cy="150.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Amazing Maurice · Metascore 53 · $21.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="538.3" cy="151.2" r="4.0" fill="#325270" opacity="0.7"><title>Cabrini · Metascore 51 · $20.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="621.3" cy="108.6" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Scream VI · Metascore 61 · $166.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="571.5" cy="124.6" r="4.0" fill="#146F79" opacity="0.7"><title>Violent Night · Metascore 55 · $76.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="488.5" cy="138.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Invitation · Metascore 45 · $38.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="226.3" r="4.0" fill="#146F79" opacity="0.7"><title>The Lady of Heaven · Metascore 41 · $0.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="696.0" cy="179.7" r="4.0" fill="#325270" opacity="0.7"><title>My Penguin Friend · Metascore 70 · $5.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="795.6" cy="163.0" r="4.0" fill="#325270" opacity="0.7"><title>Small Things Like These · Metascore 82 · $11.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="563.2" cy="151.3" r="4.0" fill="#146F79" opacity="0.7"><title>The Lord of the Rings: The War of the Rohirrim · Metascore 54 · $20.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="654.5" cy="179.0" r="4.0" fill="#325270" opacity="0.7"><title>Just the Two of Us · Metascore 65 · $5.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="613.0" cy="137.5" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Best Christmas Pageant Ever · Metascore 60 · $40.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="613.0" cy="102.4" r="4.0" fill="#146F79" opacity="0.7"><title>Lightyear · Metascore 60 · $226.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="770.7" cy="79.0" r="4.0" fill="#146F79" opacity="0.7"><title>Dune: Part Two · Metascore 79 · $714.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="380.6" cy="167.0" r="4.0" fill="#325270" opacity="0.7"><title>Redeeming Love · Metascore 32 · $9.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="480.2" cy="153.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Next Goal Wins · Metascore 44 · $18.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="762.4" cy="135.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Barbarian · Metascore 78 · $45.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="530.0" cy="194.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The American Society of Magical Negroes · Metascore 50 · $2.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="679.4" cy="144.1" r="4.0" fill="#146F79" opacity="0.7"><title>The Unbearable Weight of Massive Talent · Metascore 68 · $29.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="812.2" cy="142.1" r="4.0" fill="#146F79" opacity="0.7"><title>Shin Ultraman · Metascore 84 · $32.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="704.3" cy="123.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Menu · Metascore 71 · $79.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="646.2" cy="113.8" r="4.0" fill="#146F79" opacity="0.7"><title>Transformers One · Metascore 64 · $129.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="662.8" cy="81.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Wonka · Metascore 66 · $634.5M</title></circle>
+<circle class="dot" data-genre="Horror" cx="422.1" cy="213.1" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Devil Conspiracy · Metascore 37 · $1.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="463.6" cy="88.9" r="4.0" fill="#146F79" opacity="0.7"><title>Aquaman and the Lost Kingdom · Metascore 42 · $439.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="521.7" cy="101.3" r="4.0" fill="#146F79" opacity="0.7"><title>Bullet Train · Metascore 49 · $239.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="471.9" cy="133.9" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Strangers: Chapter 1 · Metascore 43 · $48.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="886.9" cy="144.2" r="4.0" fill="#325270" opacity="0.7"><title>Tár · Metascore 93 · $29.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="471.9" cy="131.3" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Night Swim · Metascore 43 · $54.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="471.9" cy="111.5" r="4.0" fill="#325270" opacity="0.7"><title>Where the Crawdads Sing · Metascore 43 · $144.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="563.2" cy="162.0" r="4.0" fill="#146F79" opacity="0.7"><title>Alienoid · Metascore 54 · $12.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="127.1" r="4.0" fill="#146F79" opacity="0.7"><title>Moonfall · Metascore 41 · $67.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="447.0" cy="129.2" r="4.0" fill="#146F79" opacity="0.7"><title>65 · Metascore 40 · $60.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="637.9" cy="185.6" r="4.0" fill="#146F79" opacity="0.7"><title>Fighter · Metascore 63 · $3.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="604.7" cy="59.1" r="4.0" fill="#146F79" opacity="0.7"><title>Ne Zha 2 · Metascore 59 · $1,894.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="787.3" cy="111.7" r="4.0" fill="#146F79" opacity="0.7"><title>Everything Everywhere All at Once · Metascore 81 · $143.4M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="596.4" cy="86.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Elemental · Metascore 58 · $496.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="430.4" cy="260.3" r="4.0" fill="#325270" opacity="0.7"><title>Abandoned · Metascore 38 · $0.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="637.9" cy="120.6" r="4.0" fill="#325270" opacity="0.7"><title>Downton Abbey: A New Era · Metascore 63 · $92.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="496.8" cy="334.0" r="4.0" fill="#325270" opacity="0.7"><title>Conspiracy of Silence · Metascore 46 · $0.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="455.3" cy="175.1" r="4.0" fill="#325270" opacity="0.7"><title>Marlowe · Metascore 41 · $6.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="720.9" cy="121.2" r="4.0" fill="#325270" opacity="0.7"><title>Air · Metascore 73 · $90.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="745.8" cy="170.2" r="4.0" fill="#325270" opacity="0.7"><title>The Fire Inside · Metascore 76 · $8.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="637.9" cy="146.3" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Triangle of Sadness · Metascore 63 · $26.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="521.7" cy="171.8" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Miracle Club · Metascore 49 · $7.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="530.0" cy="104.3" r="4.0" fill="#146F79" opacity="0.7"><title>The Marvels · Metascore 50 · $206.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="226.6" r="4.0" fill="#325270" opacity="0.7"><title>Hatching · Metascore 75 · $0.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="654.5" cy="114.3" r="4.0" fill="#146F79" opacity="0.7"><title>Kalki 2898 AD · Metascore 65 · $125.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="87.1" r="4.0" fill="#146F79" opacity="0.7"><title>Venom: The Last Dance · Metascore 41 · $478.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="845.4" cy="195.8" r="4.0" fill="#325270" opacity="0.7"><title>About Dry Grasses · Metascore 88 · $2.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="803.9" cy="108.6" r="4.0" fill="#146F79" opacity="0.7"><title>RRR · Metascore 83 · $166.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="646.2" cy="149.8" r="4.0" fill="#B5C5D1" opacity="0.7"><title>MaXXXine · Metascore 64 · $22.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="613.0" cy="149.9" r="4.0" fill="#146F79" opacity="0.7"><title>Novocaine · Metascore 60 · $22.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="745.8" cy="189.7" r="4.0" fill="#325270" opacity="0.7"><title>Corsage · Metascore 76 · $3.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="754.1" cy="196.3" r="4.0" fill="#146F79" opacity="0.7"><title>The Promised Land · Metascore 77 · $2.2M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="704.3" cy="132.7" r="4.0" fill="#8CA6B8" opacity="0.7"><title>One of Them Days · Metascore 71 · $51.1M</title></circle>
+<circle class="dot" data-genre="Horror" cx="687.7" cy="111.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Evil Dead Rise · Metascore 69 · $147.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="637.9" cy="149.9" r="4.0" fill="#146F79" opacity="0.7"><title>Guy Ritchie&#x27;s the Covenant · Metascore 63 · $21.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="820.5" cy="135.0" r="4.0" fill="#325270" opacity="0.7"><title>The Fabelmans · Metascore 85 · $45.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="596.4" cy="212.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Kill Room · Metascore 58 · $1.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="613.0" cy="105.6" r="4.0" fill="#146F79" opacity="0.7"><title>The Lost City · Metascore 60 · $192.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="637.9" cy="134.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Thanksgiving · Metascore 63 · $46.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="662.8" cy="124.4" r="4.0" fill="#325270" opacity="0.7"><title>Speak No Evil · Metascore 66 · $76.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="737.5" cy="124.2" r="4.0" fill="#146F79" opacity="0.7"><title>The Count of Monte-Cristo · Metascore 75 · $77.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="496.8" cy="105.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>IF · Metascore 46 · $190.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="654.5" cy="105.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Paddington in Peru · Metascore 65 · $190.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="471.9" cy="153.2" r="4.0" fill="#146F79" opacity="0.7"><title>Retribution · Metascore 43 · $18.7M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="521.7" cy="182.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Y2K · Metascore 49 · $4.4M</title></circle>
+<circle class="dot" data-genre="Action" cx="364.0" cy="287.7" r="4.0" fill="#146F79" opacity="0.7"><title>Badland · Metascore 30 · $0.0M</title></circle>
+<circle class="dot" data-genre="Horror" cx="247.8" cy="171.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Winnie-the-Pooh: Blood and Honey · Metascore 16 · $7.7M</title></circle>
+<circle class="dot" data-genre="Drama" cx="754.1" cy="163.1" r="4.0" fill="#325270" opacity="0.7"><title>Till · Metascore 77 · $11.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="471.9" cy="132.7" r="4.0" fill="#325270" opacity="0.7"><title>Back to Black · Metascore 43 · $51.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="488.5" cy="182.8" r="4.0" fill="#146F79" opacity="0.7"><title>DogMan · Metascore 45 · $4.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="297.6" cy="143.5" r="4.0" fill="#325270" opacity="0.7"><title>Reagan · Metascore 22 · $30.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="496.8" cy="176.8" r="4.0" fill="#325270" opacity="0.7"><title>The Alto Knights · Metascore 46 · $5.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="613.0" cy="130.2" r="4.0" fill="#325270" opacity="0.7"><title>The Whale · Metascore 60 · $57.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="646.2" cy="221.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Confess, Fletch · Metascore 64 · $0.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="762.4" cy="88.8" r="4.0" fill="#146F79" opacity="0.7"><title>John Wick: Chapter 4 · Metascore 78 · $440.2M</title></circle>
+<circle class="dot" data-genre="Horror" cx="347.4" cy="160.6" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Afraid · Metascore 28 · $13.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="214.7" r="4.0" fill="#325270" opacity="0.7"><title>Return to Dust · Metascore 79 · $0.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="787.3" cy="160.1" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Glass Onion · Metascore 81 · $13.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="546.6" cy="197.5" r="4.0" fill="#146F79" opacity="0.7"><title>The Contractor · Metascore 52 · $2.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="828.8" cy="139.8" r="4.0" fill="#325270" opacity="0.7"><title>Anatomy of a Fall · Metascore 86 · $36.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="330.8" cy="118.9" r="4.0" fill="#146F79" opacity="0.7"><title>Madame Web · Metascore 26 · $100.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="621.3" cy="141.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Heart Eyes · Metascore 61 · $32.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="737.5" cy="183.9" r="4.0" fill="#325270" opacity="0.7"><title>Kidnapped: The Abduction of Edgardo Mortara · Metascore 75 · $4.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="729.2" cy="174.6" r="4.0" fill="#325270" opacity="0.7"><title>Armageddon Time · Metascore 74 · $6.5M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="795.6" cy="134.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Holdovers · Metascore 82 · $45.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="554.9" cy="146.1" r="4.0" fill="#146F79" opacity="0.7"><title>Renfield · Metascore 53 · $26.5M</title></circle>
+<circle class="dot" data-genre="Action" cx="662.8" cy="90.9" r="4.0" fill="#146F79" opacity="0.7"><title>Kingdom of the Planet of the Apes · Metascore 66 · $397.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="820.5" cy="147.2" r="4.0" fill="#325270" opacity="0.7"><title>Black Bag · Metascore 85 · $25.0M</title></circle>
+<circle class="dot" data-genre="Action" cx="662.8" cy="113.6" r="4.0" fill="#146F79" opacity="0.7"><title>Dog Man · Metascore 66 · $130.2M</title></circle>
+<circle class="dot" data-genre="Drama" cx="762.4" cy="163.3" r="4.0" fill="#325270" opacity="0.7"><title>The Eight Mountains · Metascore 78 · $11.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="488.5" cy="104.2" r="4.0" fill="#325270" opacity="0.7"><title>Joker: Folie à Deux · Metascore 45 · $207.5M</title></circle>
+<circle class="dot" data-genre="Horror" cx="646.2" cy="93.5" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Alien: Romulus · Metascore 64 · $350.9M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="496.8" cy="144.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Book Club: The Next Chapter · Metascore 46 · $29.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="116.7" r="4.0" fill="#325270" opacity="0.7"><title>Conclave · Metascore 79 · $112.1M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="530.0" cy="108.4" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Ticket to Paradise · Metascore 50 · $168.8M</title></circle>
+<circle class="dot" data-genre="Horror" cx="388.9" cy="97.2" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Five Nights at Freddy&#x27;s · Metascore 33 · $291.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="762.4" cy="258.6" r="4.0" fill="#325270" opacity="0.7"><title>We&#x27;re All Going to the World&#x27;s Fair · Metascore 78 · $0.1M</title></circle>
+<circle class="dot" data-genre="Drama" cx="488.5" cy="176.2" r="4.0" fill="#325270" opacity="0.7"><title>Big George Foreman · Metascore 45 · $6.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="530.0" cy="135.0" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Ruby Gillman: Teenage Kraken · Metascore 50 · $45.7M</title></circle>
+<circle class="dot" data-genre="Horror" cx="745.8" cy="120.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Talk to Me · Metascore 76 · $92.0M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="737.5" cy="140.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>The Bob&#x27;s Burgers Movie · Metascore 75 · $34.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="455.3" cy="91.1" r="4.0" fill="#146F79" opacity="0.7"><title>Black Adam · Metascore 41 · $393.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="563.2" cy="131.0" r="4.0" fill="#325270" opacity="0.7"><title>The Boys in the Boat · Metascore 54 · $55.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="588.1" cy="151.2" r="4.0" fill="#325270" opacity="0.7"><title>Ordinary Angels · Metascore 57 · $20.6M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="729.2" cy="185.2" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Daaaaaali! · Metascore 74 · $3.9M</title></circle>
+<circle class="dot" data-genre="Drama" cx="720.9" cy="135.9" r="4.0" fill="#325270" opacity="0.7"><title>Ferrari · Metascore 73 · $43.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="563.2" cy="90.6" r="4.0" fill="#146F79" opacity="0.7"><title>Bad Boys: Ride or Die · Metascore 54 · $404.6M</title></circle>
+<circle class="dot" data-genre="Action" cx="546.6" cy="221.0" r="4.0" fill="#146F79" opacity="0.7"><title>Azrael · Metascore 52 · $0.7M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="712.6" cy="116.9" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Mickey 17 · Metascore 72 · $110.8M</title></circle>
+<circle class="dot" data-genre="Action" cx="447.0" cy="90.9" r="4.0" fill="#146F79" opacity="0.7"><title>Meg 2: The Trench · Metascore 40 · $397.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="563.2" cy="137.2" r="4.0" fill="#325270" opacity="0.7"><title>Arthur the King · Metascore 54 · $40.9M</title></circle>
+<circle class="dot" data-genre="Action" cx="795.6" cy="126.4" r="4.0" fill="#146F79" opacity="0.7"><title>The Northman · Metascore 82 · $69.6M</title></circle>
+<circle class="dot" data-genre="Horror" cx="604.7" cy="156.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>Terrifier 2 · Metascore 59 · $15.7M</title></circle>
+<circle class="dot" data-genre="Action" cx="571.5" cy="203.6" r="4.0" fill="#146F79" opacity="0.7"><title>Mayhem! · Metascore 55 · $1.6M</title></circle>
+<circle class="dot" data-genre="Drama" cx="853.7" cy="109.6" r="4.0" fill="#325270" opacity="0.7"><title>Killers of the Flower Moon · Metascore 89 · $158.8M</title></circle>
+<circle class="dot" data-genre="Drama" cx="895.2" cy="136.4" r="4.0" fill="#325270" opacity="0.7"><title>Past Lives · Metascore 94 · $42.7M</title></circle>
+<circle class="dot" data-genre="Comedy" cx="579.8" cy="96.6" r="4.0" fill="#8CA6B8" opacity="0.7"><title>Migration · Metascore 56 · $300.2M</title></circle>
+<circle class="dot" data-genre="Action" cx="513.4" cy="115.0" r="4.0" fill="#146F79" opacity="0.7"><title>Gran Turismo · Metascore 48 · $122.1M</title></circle>
+<circle class="dot" data-genre="Action" cx="405.5" cy="108.5" r="4.0" fill="#146F79" opacity="0.7"><title>Morbius · Metascore 35 · $167.5M</title></circle>
+<circle class="dot" data-genre="Drama" cx="704.3" cy="235.5" r="4.0" fill="#325270" opacity="0.7"><title>Disco Boy · Metascore 71 · $0.3M</title></circle>
+<circle class="dot" data-genre="Horror" cx="438.7" cy="112.7" r="4.0" fill="#B5C5D1" opacity="0.7"><title>The Exorcist: Believer · Metascore 39 · $136.3M</title></circle>
+<circle class="dot" data-genre="Action" cx="330.8" cy="141.6" r="4.0" fill="#146F79" opacity="0.7"><title>Borderlands · Metascore 26 · $33.0M</title></circle>
+<circle class="dot" data-genre="Drama" cx="770.7" cy="128.0" r="4.0" fill="#325270" opacity="0.7"><title>Babygirl · Metascore 79 · $64.4M</title></circle>
+<circle class="dot" data-genre="Drama" cx="563.2" cy="139.2" r="4.0" fill="#325270" opacity="0.7"><title>Orphan: First Kill · Metascore 54 · $37.1M</title></circle></g><text class="axislabel" x="510" y="370">Critic Metascore (0–100)</text><text class="axislabel" transform="translate(20 255) rotate(-90)">Worldwide gross (log USD)</text></svg><div class="caps">Hover points for exact movie names and values. Preview filters only; the live site includes a year slider and fitted confidence intervals.</div></div></section><section class="section" id="reversal"><div class="eyebrow">Chapter 03</div><h2>The reversal: adjustment changes the story</h2><div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="stat"><label>SIMPLE REGRESSION</label><strong>−9.1%</strong><small>p = 0.205 · not significant</small></div><div class="stat"><label>MULTIPLE REGRESSION</label><strong style="color:#147A80">+22.9%</strong><small>p = 0.0008 · conditional on modeled controls</small></div></div><div class="callout">Prediction, association and causation are different. The full site explains this distinction in each model and system map.</div></section><section class="section" id="maps"><div class="eyebrow">Chapter 06</div><h2>Three ways to see one system</h2><p>Map A: statistical associations · Map B: theoretical hidden factors · Map C: machine-learning interpretation.</p><img id="map-mini" src="assets/map_b.png" alt="System map B preview"></section><div class="footer" id="end">ACDT PROJECT 1 · FULL INTERACTIVE SITE: STREAMLIT / app.py</div></main><script>function filterGenre(g){document.querySelectorAll('#movie-dots .dot').forEach(function(e){e.style.display=(g==='All'||e.getAttribute('data-genre')===g)?'':'none'})}</script></body></html>
