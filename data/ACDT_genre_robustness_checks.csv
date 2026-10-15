@@ -1,0 +1,5 @@
+Sample,N,Metascore 10-point assoc. (%),Metascore p (additive),Genre interaction joint p
+Main analysis (primary genre),385,22.9,0.0008,0.0493
+2022–2024 only,356,22.2,0.0017,0.0503
+Exactly one target genre,242,16.8,0.0513,0.9231
+Nonexclusive multi-label genre coding,385,24.3,0.0008,0.0479

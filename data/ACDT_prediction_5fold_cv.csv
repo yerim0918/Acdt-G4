@@ -1,0 +1,3 @@
+Model,CV mean R²,CV R² SD,CV mean MAE (log scale),CV MAE SD
+Linear Regression,0.547,0.08,1.217,0.068
+Random Forest,0.585,0.049,1.188,0.02

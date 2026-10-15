@@ -1,0 +1,3 @@
+Model,Test N,Test R² (log revenue),Test MAE (log USD)
+Linear baseline,77,0.511,1.148
+Random Forest,77,0.564,1.152

@@ -1,0 +1,2 @@
+Method,N,Metascore β (log USD / point),SE (orthogonal score),p (approx),CI low,CI high,10-point %
+"5-fold RF-DML (PLR, partialling out)",385,0.02175893185521052,0.005538369982692472,8.53846551563907e-05,0.010903726689133274,0.032614137021287765,24.30764543384263
