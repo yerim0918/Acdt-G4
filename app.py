@@ -317,7 +317,7 @@ with a:
 with b:
     st.markdown("""<div class="editorial"><h3>What remains uncertain</h3><p>Unmeasured marketing, franchise strength, screen reach and release strategy may shape these patterns. Films lacking disclosed budgets are excluded; 2025 is partial; critics’ scores may also reflect timing and success. These models do not identify a causal effect of scores.</p></div>""",unsafe_allow_html=True)
 
-st.markdown("### Study materials · download & verify")
+st.markdown("### Supporting Materials · download & verify")
 st.caption("Resources are bundled in this project repository. Files are downloadable individually here.")
 resources=[
     ("Executive summary · PDF",ROOT/"Executive_Summary.pdf","application/pdf"),
