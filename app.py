@@ -153,7 +153,8 @@ st.markdown("""
 <div class="hero">
   <div class="eyebrow">An interactive ACDT data story · project 1</div>
   <h1>Beyond the Ratings.</h1>
-  <div class="deck">Do better-reviewed films earn more? A journey from a familiar assumption to the hidden systems shaping global box-office success.</div>
+  <div class="deck">Do better-reviewed films earn more? 
+  From a familiar assumption to the hidden systems shaping global box-office success.</div>
   <div class="tags"><span class="tag">2022–2025 releases</span><span class="tag">385 films analyzed</span><span class="tag">4 genres</span><span class="tag">Regression + Random Forest + DML</span></div>
 </div>
 """, unsafe_allow_html=True)
