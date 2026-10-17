@@ -209,64 +209,13 @@ st.markdown(
     not equal dollar increases. This makes smaller and larger movies easier to compare.</p></div>""",
     unsafe_allow_html=True,
 )
-st.markdown("#### The films missing from our analysis")
 st.markdown(
-    "Our final 385-film model requires a reported budget. To assess what this excludes, "
-    "we also checked an **earlier intermediate cleaned dataset** before the complete-case "
-    "and four-genre restrictions. The following counts refer to **1,143 movies with Metascore "
-    "from 2022–2025**, not to the final 407 USD-converted candidates."
-)
-missing_col,reported_col,missing_share_col=st.columns(3,gap="small")
-with missing_col:
-    st.metric("Budget not reported", "703 of 1,143")
-with reported_col:
-    st.metric("Budget reported", "440 of 1,143")
-with missing_share_col:
-    st.metric("Budget missing", "61.5%")
-audit = pd.DataFrame({
-    "Intermediate dataset group": ["Budget reported (440)", "Budget missing (703)"],
-    "Median worldwide gross (USD)": [29_031_535.5, 422_329.0],
-})
-fig_missing = px.bar(
-    audit,
-    x="Intermediate dataset group",
-    y="Median worldwide gross (USD)",
-    text="Median worldwide gross (USD)",
-    color="Intermediate dataset group",
-    color_discrete_sequence=[TEAL,"#8AA6B7"],
-)
-fig_missing.update_traces(texttemplate="$%{text:,.0f}", textposition="outside", cliponaxis=False)
-fig_missing.update_yaxes(title="Median worldwide gross (USD)", rangemode="tozero")
-fig_missing.update_xaxes(title=None)
-fig_missing.update_layout(showlegend=False)
-chart_style(fig_missing,320)
-st.plotly_chart(fig_missing,use_container_width=True,config={"displayModeBar":False})
-st.markdown(
-    """<div class="callout"><strong>Why this matters:</strong> Films without reported budgets
-    had a much lower median worldwide gross (about <strong>$0.42M</strong>) than films with
-    reported budgets (about <strong>$29.0M</strong>) in the intermediate sample.
-    Deleting budget-missing records may therefore favor better-documented, higher-grossing
-    releases. We cannot assume that our findings describe all films, particularly smaller
-    or limited-release productions.</div>""",
+    """<div class="editorial"><h3>Data Limitation — Potential Selection Bias</h3>
+    <p>Movies with missing budget or revenue information were excluded from our analysis.
+    Because financial data may be less available for smaller or independent films,
+    our final sample may overrepresent larger, better-documented productions.
+    Therefore, the findings should not be generalized to all movies.</p></div>""",
     unsafe_allow_html=True,
-)
-st.caption(
-    "Source: Group 4 intermediate cleaned movie data with non-missing Metascore, "
-    "2022–2025 release years, and valid worldwide revenue, before the complete-case "
-    "budget filter. The descriptive comparison does not establish why a budget is missing "
-    "or identify every excluded film as independent."
-)
-audit_download=pd.DataFrame({
-    "budget_reported": [True, False],
-    "movie_count": [440, 703],
-    "median_worldwide_gross_usd": [29_031_535.5, 422_329.0],
-    "sample_stage": ["Intermediate cleaned dataset; 2022-2025; Metascore available"]*2,
-})
-st.download_button(
-    "Download missing-budget audit summary (CSV)",
-    data=audit_download.to_csv(index=False).encode("utf-8"),
-    file_name="Group4_budget_missingness_audit_summary.csv",
-    mime="text/csv",
 )
 with st.expander("How the 385-film sample was built"):
 
