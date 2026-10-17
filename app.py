@@ -1,3 +1,291 @@
+"""Beyond the Ratings | interactive ACDT Project 1 data story.
+
+Run: streamlit run app.py
+Analysis derives from the supplied ACDT USD-converted dataset and notebook.
+"""
+from pathlib import Path
+import io
+import math
+
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import statsmodels.formula.api as smf
+import streamlit as st
+
+from analysis import (
+    DATA, GENRES, ROOT, fit_regressions, load_raw, per_ten_points,
+    prediction, prediction_curve, prepare_data,
+)
+
+ASSETS = ROOT / "assets"
+FONT = "Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
+NAVY = "#142C43"
+BLUE = "#2E617E"
+TEAL = "#147A80"
+PALE = "#E5F2F0"
+SLATE = "#6D7C8E"
+BORDER = "#DBE5EE"
+GENRE_COLORS = {"Action": "#116D75", "Comedy": "#7391A7", "Drama": "#283F60", "Horror": "#A0B1C0"}
+
+st.set_page_config(
+    page_title="Beyond the Ratings | ACDT Data Story",
+    page_icon="🎬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+st.markdown("""
+<style>
+:root { --navy:#142C43; --slate:#65778A; --teal:#147A80; --border:#DBE5EE; }
+html { scroll-behavior:smooth; }
+[data-testid="stAppViewContainer"] { background:linear-gradient(180deg,#FAFCFF 0%,#F6F9FC 52%,#FCFDFE 100%); }
+[data-testid="stHeader"] { background:rgba(250,252,255,.76); }
+[data-testid="stSidebar"] { background:#EEF3F8; border-right:1px solid #DCE6F0; }
+.block-container {max-width:1230px; padding-top:1.25rem; padding-bottom:5.5rem;}
+h1,h2,h3,h4,h5 { color:#142C43; letter-spacing:-.035em; }
+p,li {line-height:1.65;}
+[data-testid="stMarkdownContainer"] p {color:#40566B;}
+.hero {position:relative;padding:3.0rem 3.35rem 2.8rem;border-radius:22px;background:linear-gradient(123deg,#102941 0%,#1B425A 72%,#176D74 142%);color:#fff;overflow:hidden;box-shadow:0 13px 35px rgba(18,42,60,.09);}
+.hero::after {content:"";position:absolute;right:-7%;top:-70px;width:370px;height:370px;border:1px solid rgba(255,255,255,.13);border-radius:50%;box-shadow:0 0 0 80px rgba(255,255,255,.025),0 0 0 155px rgba(255,255,255,.015);}
+.hero .eyebrow {font-size:12px;letter-spacing:2.7px;text-transform:uppercase;font-weight:700;color:#93D6D4;}
+.hero h1 {font-size:clamp(2.2rem,5vw,4.0rem);line-height:1.06;color:white;max-width:850px;margin:1.15rem 0 1rem;}
+.hero .deck {font-size:1.1rem;color:#D7E5EB;line-height:1.8;max-width:740px;}
+.hero .tags {margin-top:1.9rem;display:flex;gap:.55rem;flex-wrap:wrap;}
+.hero .tag {padding:.42rem .78rem;border-radius:32px;color:#EAF7F6;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.17);font-size:12px;font-weight:600;}
+.sectionHead {padding-top:2.2rem;padding-bottom:.45rem;}
+.sectionHead .eyebrow{font-size:.8rem;font-weight:800;letter-spacing:2px;color:#147A80;text-transform:uppercase;}
+.sectionHead h2 {font-size:clamp(1.65rem,3vw,2.45rem);line-height:1.2;margin:.45rem 0 .55rem;}
+.sectionHead p {max-width:840px;color:#65788B;line-height:1.7;font-size:1rem;}
+.chapterrule {height:1px;background:linear-gradient(90deg,#d2dfe8,transparent);margin:1.8rem 0 .15rem;}
+.numberstrip {background:#EAF3F5;border:1px solid #D5E8EB;border-radius:18px;padding:1.2rem 1.45rem;}
+.factlabel {text-transform:uppercase;letter-spacing:1.2px;color:#688092;font-size:11px;font-weight:750;}
+.factvalue {color:#152F47;font-size:2.05rem;line-height:1.3;font-weight:780;letter-spacing:-.04em;}
+.factnote {color:#738699;font-size:12px;line-height:1.5;}
+.editorial {padding:1.35rem 1.6rem;border:1px solid #DCE7EF;border-radius:16px;background:white;box-shadow:0 5px 18px rgba(29,53,74,.025);margin:.7rem 0;}
+.editorial h3 {margin:0 0 .45rem;font-size:1.15rem;}
+.editorial p {margin:0;}
+.callout {border-left:4px solid #147A80;padding:1.15rem 1.5rem;border-radius:0 12px 12px 0;background:#EEF6F6;margin:1.2rem 0;}
+.callout strong {color:#12374A;}
+.mini-card {background:#fff;border:1px solid #D9E5ED;border-radius:14px;padding:1.25rem;margin:.35rem 0;min-height:137px;}
+.mini-card .metric {font-size:2.3rem;line-height:1.17;letter-spacing:-.045em;font-weight:800;color:#147A80;margin:.25rem 0;}
+.mini-card .metric.muted {color:#73879A;}
+.mini-card .title {font-weight:750;color:#1F3952;font-size:13px;}
+.mini-card .sub {font-size:12px;color:#748596;line-height:1.45;}
+.mapheading {font-size:1.25rem;font-weight:800;color:#14334B;margin:0 0 .45rem;}
+.stButton>button[kind="primary"],.stDownloadButton>button[kind="primary"] {background:#147A80;border-color:#147A80;}
+[data-testid="stPlotlyChart"] {border-radius:15px;overflow:hidden;}
+footer {visibility:hidden;}
+@media(max-width:750px){.hero{padding:2.2rem 1.5rem}.hero h1{font-size:2.4rem}.block-container{padding:1rem 1rem 4rem}}
+</style>
+""", unsafe_allow_html=True)
+
+
+def chapter(num: str, title: str, subtitle: str) -> None:
+    st.markdown(f'<div class="chapterrule"></div><div class="sectionHead" id="chapter-{num}"><div class="eyebrow">Chapter {num}</div><h2>{title}</h2><p>{subtitle}</p></div>', unsafe_allow_html=True)
+
+
+def chart_style(fig, height: int = 410):
+    fig.update_layout(
+        height=height, template="plotly_white", font=dict(family=FONT, color=NAVY, size=13),
+        title=None, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FFFFFF",
+        margin=dict(l=20, r=15, t=25, b=24), legend_title_text="",
+        legend=dict(orientation="h", yanchor="bottom", y=1.04, xanchor="left", x=0),
+        hoverlabel=dict(bgcolor="#112A42", font_color="#FFFFFF"),
+    )
+    fig.update_xaxes(showgrid=True, gridcolor="#ECF0F5", zeroline=False, linecolor="#D9E5ED")
+    fig.update_yaxes(showgrid=True, gridcolor="#ECF0F5", zeroline=False, linecolor="#D9E5ED")
+    return fig
+
+
+def card(label, value, note="", muted=False):
+    m = " muted" if muted else ""
+    st.markdown(f'<div class="mini-card"><div class="title">{label}</div><div class="metric{m}">{value}</div><div class="sub">{note}</div></div>', unsafe_allow_html=True)
+
+
+@st.cache_data(show_spinner=False)
+def get_data():
+    raw = load_raw()
+    df, validated = prepare_data(raw)
+    return raw, df, validated
+
+
+@st.cache_resource(show_spinner=False)
+def get_models():
+    _, data, _ = get_data()
+    return fit_regressions(data)
+
+
+@st.cache_resource(show_spinner=False)
+def get_budget_only_model():
+    """Intermediate HC3-robust regression; same 385-film sample as the main models."""
+    _, data, _ = get_data()
+    return smf.ols("log_revenue ~ metascore + log_budget", data=data).fit(cov_type="HC3")
+
+
+@st.cache_data(show_spinner=False)
+def load_table(name):
+    return pd.read_csv(DATA / name)
+
+
+raw, df, validated = get_data()
+simple, multiple, interaction = get_models()
+budget_only = get_budget_only_model()
+ols_table = load_table("ACDT_OLS_comparison.csv")
+interaction_table = load_table("ACDT_genre_interaction.csv")
+robustness = load_table("ACDT_genre_robustness_checks.csv")
+prediction_cv = load_table("ACDT_prediction_5fold_cv.csv")
+prediction_test = load_table("ACDT_prediction_comparison.csv")
+dml = load_table("ACDT_DML_results.csv").iloc[0]
+rf_importance = load_table("RF_feature_importance.csv")
+
+with st.sidebar:
+    st.markdown("### 🎞️ BEYOND THE RATINGS")
+    st.caption("ACDT Project 1 · Group research")
+    st.markdown("**Reading guide**")
+    st.markdown("""[01 · The myth](#chapter-01)  
+[02 · The data](#chapter-02)  
+[03 · The reversal](#chapter-03)  
+[04 · The genre question](#chapter-04)  
+[05 · Beyond linear models](#chapter-05)  
+[06 · System maps](#chapter-06)  
+[07 · Try it yourself](#chapter-07)  
+[08 · Takeaways & sources](#chapter-08)""")
+    st.divider()
+    st.metric("Study sample", f"{len(df)} films")
+    st.caption("2022–2025 · Action / Comedy / Drama / Horror")
+    st.caption("Metascore: critic ratings (0–100). Outcome: worldwide gross (USD).")
+    st.info("**Interpretation:** This is an observational study. Coefficients are adjusted associations, not proven causal effects.", icon="ℹ️")
+
+st.markdown("""
+<div class="hero">
+  <div class="eyebrow">Interactive data story · ACDT project 1</div>
+  <h1>Beyond the Ratings.</h1>
+  <div class="deck">Do better-reviewed films earn more?—From a familiar assumption to the hidden systems shaping global box-office success.</div>
+  <div class="tags"><span class="tag">2022–2025 releases</span><span class="tag">385 films analyzed</span><span class="tag">4 genres</span><span class="tag">Regression + Random Forest + DML</span></div>
+</div>
+""", unsafe_allow_html=True)
+st.caption("A research narrative based on the supplied IMDb-derived Kaggle dataset, subsequent cleaning and USD conversion, and the group’s Python analysis notebook.")
+
+chapter("01", "The myth: a better review means a bigger hit", "It sounds intuitive: acclaimed movies should attract audiences, generating higher box-office revenue. But is this visible in the data—and is it consistent across genres?")
+c1,c2 = st.columns([3,2],gap="large")
+with c1:
+    st.markdown("""<div class="editorial"><h3>Our research question</h3><p>How is <strong>Metacritic Metascore</strong> associated with <strong>worldwide box-office revenue</strong> after accounting for production budget, release year, and genre? Does the association change by genre?</p></div>""",unsafe_allow_html=True)
+with c2:
+    st.markdown("""<div class="editorial"><h3>What would change our minds?</h3><p>First compare the raw Metascore relationship with revenue, then adjust for other measured factors, then test whether a more flexible model changes the conclusion.</p></div>""",unsafe_allow_html=True)
+st.markdown('<div class="callout"><strong>Hypothesis.</strong> Higher critic scores tend to be associated with higher worldwide revenue; genre may moderate that relationship. This is a test of association, not proof that reviews cause ticket sales.</div>',unsafe_allow_html=True)
+
+chapter("02", "Meet the evidence", "Our data was cleaned before modeling. Hover over individual films, filter genres, and reveal how the available release years change the picture.")
+col1,col2,col3,col4 = st.columns(4,gap="small")
+with col1: card("USD-CONVERTED INPUT",f"{len(raw):,}","2022–2025 candidate films")
+with col2: card("VALIDATED RECORDS",f"{len(validated):,}","After log-compatible checks")
+with col3: card("FINAL SAMPLE",f"{len(df):,}","Movies assigned to 4 study genres")
+with col4: card("GENRE GROUPS","4","First matching study genre in listed genres")
+
+left,right = st.columns([2,1],gap="large")
+with left:
+    movie_genres = st.multiselect("Select genres to explore", options=list(GENRES), default=list(GENRES),key="explorer_genres")
+with right:
+    through_year = st.select_slider("Reveal releases through",options=[2022,2023,2024,2025],value=2025,key="explorer_year")
+subset = df.loc[df.primary_genre.isin(movie_genres) & (df.release_year <= through_year)].copy()
+if len(subset):
+    subset["gross_m"] = subset.gross_worldwide / 1e6
+    fig = px.scatter(subset,x="metascore",y="gross_m",color="primary_genre",color_discrete_map=GENRE_COLORS,
+        custom_data=["title","release_year","budget","rating"],opacity=.78,
+        labels={"metascore":"Critic Metascore (0–100)","gross_m":"Worldwide box office ($M, log scale)","primary_genre":"Genre"})
+    fig.update_traces(marker=dict(size=8, line=dict(color="white",width=.55)),
+        hovertemplate="<b>%{customdata[0]}</b><br>Metascore: %{x:.0f}<br>Worldwide gross: $%{y:,.2f}M<br>Year: %{customdata[1]}<br>Budget (USD): $%{customdata[2]:,.0f}<br>IMDb rating: %{customdata[3]:.1f}<extra></extra>")
+    fig.update_yaxes(type="log")
+    chart_style(fig,450)
+    st.plotly_chart(fig,use_container_width=True,config={"displaylogo":False})
+    st.caption(f"Showing {len(subset):,} individual films released through {through_year}; worldwide gross is on a logarithmic display scale. Points represent movies, not model predictions.")
+else:
+    st.warning("Select at least one genre to display the data.")
+st.markdown(
+    """<div class="editorial"><h3>Reading the logarithmic axis</h3>
+    <p>Movie grosses differ dramatically. On this graph, equal vertical distances mean equal
+    <strong>proportional changes</strong> (such as $1M to $10M and $10M to $100M),
+    not equal dollar increases. This makes smaller and larger movies easier to compare.</p></div>""",
+    unsafe_allow_html=True,
+)
+st.markdown("#### The films missing from our analysis")
+st.markdown(
+    "Our final 385-film model requires a reported budget. To assess what this excludes, "
+    "we also checked an **earlier intermediate cleaned dataset** before the complete-case "
+    "and four-genre restrictions. The following counts refer to **1,143 movies with Metascore "
+    "from 2022–2025**, not to the final 407 USD-converted candidates."
+)
+missing_col,reported_col,missing_share_col=st.columns(3,gap="small")
+with missing_col:
+    st.metric("Budget not reported", "703 of 1,143")
+with reported_col:
+    st.metric("Budget reported", "440 of 1,143")
+with missing_share_col:
+    st.metric("Budget missing", "61.5%")
+audit = pd.DataFrame({
+    "Intermediate dataset group": ["Budget reported (440)", "Budget missing (703)"],
+    "Median worldwide gross (USD)": [29_031_535.5, 422_329.0],
+})
+fig_missing = px.bar(
+    audit,
+    x="Intermediate dataset group",
+    y="Median worldwide gross (USD)",
+    text="Median worldwide gross (USD)",
+    color="Intermediate dataset group",
+    color_discrete_sequence=[TEAL,"#8AA6B7"],
+)
+fig_missing.update_traces(texttemplate="$%{text:,.0f}", textposition="outside", cliponaxis=False)
+fig_missing.update_yaxes(title="Median worldwide gross (USD)", rangemode="tozero")
+fig_missing.update_xaxes(title=None)
+fig_missing.update_layout(showlegend=False)
+chart_style(fig_missing,320)
+st.plotly_chart(fig_missing,use_container_width=True,config={"displayModeBar":False})
+st.markdown(
+    """<div class="callout"><strong>Why this matters:</strong> Films without reported budgets
+    had a much lower median worldwide gross (about <strong>$0.42M</strong>) than films with
+    reported budgets (about <strong>$29.0M</strong>) in the intermediate sample.
+    Deleting budget-missing records may therefore favor better-documented, higher-grossing
+    releases. We cannot assume that our findings describe all films, particularly smaller
+    or limited-release productions.</div>""",
+    unsafe_allow_html=True,
+)
+st.caption(
+    "Source: Group 4 intermediate cleaned movie data with non-missing Metascore, "
+    "2022–2025 release years, and valid worldwide revenue, before the complete-case "
+    "budget filter. The descriptive comparison does not establish why a budget is missing "
+    "or identify every excluded film as independent."
+)
+audit_download=pd.DataFrame({
+    "budget_reported": [True, False],
+    "movie_count": [440, 703],
+    "median_worldwide_gross_usd": [29_031_535.5, 422_329.0],
+    "sample_stage": ["Intermediate cleaned dataset; 2022-2025; Metascore available"]*2,
+})
+st.download_button(
+    "Download missing-budget audit summary (CSV)",
+    data=audit_download.to_csv(index=False).encode("utf-8"),
+    file_name="Group4_budget_missingness_audit_summary.csv",
+    mime="text/csv",
+)
+with st.expander("How the 385-film sample was built"):
+
+    st.markdown("""The original USD-converted file contains **407** movies. The notebook requires valid Metascore, votes ≥ 100, worldwide gross > 0, and budget ≥ $1,000. One film is excluded for an implausibly low reported budget, and 21 of the remaining 406 do not match one of our four target genres. Each film is assigned the **first matching** target genre from its original genre list. This selection and missing-budget exclusions may bias the sample. The source dataset is not a random sample of every film worldwide. The 2025 period is incomplete.""")
+    st.dataframe(df["primary_genre"].value_counts().rename_axis("Genre").reset_index(name="Movies"),hide_index=True,use_container_width=True)
+
+chapter("03", "The reversal: adjustment changes the story", "A raw one-variable trend is not the same as a comparison of films with similar production budgets, years, and genres.")
+c1,c2 = st.columns(2,gap="medium")
+with c1:
+    card("SIMPLE REGRESSION", f"{per_ten_points(simple.params['metascore']):+.1f}%",f"Per +10 Metascore points · p = {simple.pvalues['metascore']:.3f}",muted=True)
+with c2:
+    card("MULTIPLE REGRESSION", f"{per_ten_points(multiple.params['metascore']):+.1f}%",f"Per +10 points · p = {multiple.pvalues['metascore']:.4f}")
+st.markdown('<div class="callout"><strong>The twist:</strong> Metascore was not significant by itself (p ≈ 0.205). After controlling for budget, release year and genre, it showed a positive adjusted association (p ≈ 0.0008). This difference is not itself evidence of causation.</div>',unsafe_allow_html=True)
+st.markdown("**What changed as we added controls?**")
+explain_models=pd.DataFrame([
+    {"Comparison":"Metascore only", "Association per +10 points":f"{per_ten_points(simple.params['metascore']):+.1f}%", "p-value":f"{simple.pvalues['metascore']:.4f}","Controls":"None"},
+    {"Comparison":"Metascore + budget", "Association per +10 points":f"{per_ten_points(budget_only.params['metascore']):+.1f}%", "p-value":f"{budget_only.pvalues['metascore']:.4f}","Controls":"ln(budget)"},
+    {"Comparison":"Metascore + budget + year + genre", "Association per +10 points":f"{per_ten_points(multiple.params['metascore']):+.1f}%", "p-value":f"{multiple.pvalues['metascore']:.4f}","Controls":"ln(budget), release year, primary genre"},
+])
 st.dataframe(explain_models,hide_index=True,use_container_width=True)
 st.markdown(
     """<div class="editorial"><h3>Why can the sign reverse?</h3><p>
